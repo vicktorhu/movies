@@ -16,6 +16,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 // import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,13 +123,15 @@ export default function App() {
   );
 }
 
+const apiKey = 'b9b19d5f';
+
 class Home extends Component {
   state = {
     movies: [],
   };
 
   componentDidMount() {
-    fetch("https://www.omdbapi.com/?apikey=b9b19d5f&s=avengers")
+    fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=avengers`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -144,12 +147,11 @@ class Home extends Component {
   }
   render() {
     return (
-      <div>
+      <Grid className="movieContainer" container spacing={3}>
         {this.state.movies.map(function (movie, index) {
-          return <MovieThumbnail {...movie}></MovieThumbnail>
+          return <Grid xs={12} lg={3}><MovieThumbnail {...movie}></MovieThumbnail></Grid>
         })}
-
-      </div>
+      </Grid>
     );
   }
 }
@@ -158,9 +160,11 @@ class Home extends Component {
 class MovieThumbnail extends Component {
   render() {
     return (
-      <div className="movieThumbnail">
-        <img src={this.props.Poster} />
-        {this.props.Title}
+      <div>
+        <div className="movieThumbnail">
+          <Link to={'/movie/' + this.props.imdbID}><img className="moviePoster" alt={this.props.Title} src={this.props.Poster} /></Link>
+          <Link className="movieTitle" to={'/movie/' + this.props.imdbID}><p>{this.props.Title}</p></Link>
+        </div>
       </div>
     );
   }
