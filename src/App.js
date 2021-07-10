@@ -10,13 +10,14 @@ import {
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-// import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
-// import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+
+const apiKey = 'b9b19d5f';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,6 +115,7 @@ export default function App() {
           <Route path="/users">
             <Users />
           </Route>
+          <Route path="/movie/:id" component={SingleMovie}></Route>
           <Route path="/">
             <Home />
           </Route>
@@ -122,8 +124,6 @@ export default function App() {
     </Router>
   );
 }
-
-const apiKey = 'b9b19d5f';
 
 class Home extends Component {
   state = {
@@ -149,7 +149,7 @@ class Home extends Component {
     return (
       <Grid className="movieContainer" container spacing={3}>
         {this.state.movies.map(function (movie, index) {
-          return <Grid xs={12} lg={3}><MovieThumbnail {...movie}></MovieThumbnail></Grid>
+          return <Grid item xs={12} lg={2}><MovieThumbnail {...movie}></MovieThumbnail></Grid>
         })}
       </Grid>
     );
@@ -170,7 +170,52 @@ class MovieThumbnail extends Component {
   }
 }
 
-
+class SingleMovie extends Component {
+  state = {
+    movie: {},
+  };
+  componentDidMount() {
+    fetch(`http://www.omdbapi.com/?i=${this.props.match.params.id}&plot=full&apikey=${apiKey}`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            movie: result
+          });
+          console.log(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  }
+  render() {
+    // if (this.movie === undefined) {
+    //   return (
+    //     <div>Loading {this.movie}</div>
+    //   );
+    // } else {
+      return (
+        <Grid container spacing={3}>
+          <Grid item xs={12} lg={3} p={10}>
+            <Box p={4} >
+              <img className="moviePoster" alt={this.state.movie.Title} src={this.state.movie.Poster} />
+            </Box>
+          </Grid>
+          <Grid item xs={12} lg={9}>
+            <Box p={4} >
+              <h2 className="singlemoviedetail title">{this.state.movie.Title} ({this.state.movie.Year})</h2>
+              <div className="singlemoviedetail">{this.state.movie.Genre}</div>
+              <div className="singlemoviedetail">{this.state.movie.Director}</div>
+              <div className="singlemoviedetail">{this.state.movie.Actor}</div>
+              <div className="singlemoviedetail">{this.state.movie.Plot}</div>
+            </Box>
+          </Grid>
+        </Grid>
+      );
+    }
+  // } 
+}
 
 function About() {
   return <h2>About</h2>;

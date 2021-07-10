@@ -14,6 +14,7 @@ body {
 }
 
 .moviePoster{
+  width: 100%;
 }
 
 .movieTitle {
@@ -25,4 +26,11 @@ body {
 
 .movieTitle>p{
   margin-top: 5px;
+}
+
+.singlemoviedetail{
+  padding-bottom: 5px;
+}
+.singlemoviedetail.title{
+/* font-size: 20px; */
 }
